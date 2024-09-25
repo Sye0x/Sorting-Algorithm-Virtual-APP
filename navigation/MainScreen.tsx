@@ -1,17 +1,21 @@
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, Pressable } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-
+import { useNavigation } from "@react-navigation/native";
 const MainScreen = () => {
+  const navigation = useNavigation<any>();
   return (
     <View style={styles.background}>
       <View style={styles.containerrow}>
-        <View style={styles.container}>
+        <Pressable
+          style={styles.container}
+          onPress={() => navigation.navigate("Bubble")}
+        >
           <Text style={styles.containertext}>Bubble</Text>
           <Text style={styles.containertext}>Sort</Text>
-        </View>
+        </Pressable>
         <View style={styles.container}>
           <Text style={styles.containertext}>Selection</Text>
           <Text style={styles.containertext}>Sort</Text>
