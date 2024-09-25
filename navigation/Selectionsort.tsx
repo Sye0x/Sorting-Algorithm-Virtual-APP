@@ -13,33 +13,39 @@ import { useNavigation } from "@react-navigation/native";
 const generateRandomWidths = () =>
   Array.from({ length: 70 }, () => Math.floor(Math.random() * 85) + 1);
 
-const Bubblesort = () => {
+const Selectionsort = () => {
   // State to hold the line widths
   const [lineWidths, setLineWidths] = useState(generateRandomWidths());
   const [isSorting, setIsSorting] = useState(false); // State to track if sorting is in progress
   const navigation = useNavigation<any>();
 
-  // Bubble Sort Algorithm with visual updates
-  const bubbleSort = async () => {
+  // Selection Sort Algorithm with visual updates
+  const selectionSort = async () => {
     if (isSorting) return; // Prevent multiple clicks on the button
     setIsSorting(true); // Set sorting state to true
 
     let arr = [...lineWidths]; // Copy the current line widths
     let n = arr.length;
 
-    // Perform bubble sort with async to animate
+    // Perform selection sort with async to animate
     for (let i = 0; i < n - 1; i++) {
-      for (let j = 0; j < n - i - 1; j++) {
-        if (arr[j] > arr[j + 1]) {
-          // Swap adjacent elements
-          [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
-
-          // Update the state to trigger UI re-render
-          setLineWidths([...arr]);
-
-          // Add a delay for visualization
-          await new Promise((resolve) => setTimeout(resolve, 1));
+      // Find the minimum element in unsorted array
+      let minIndex = i;
+      for (let j = i + 1; j < n; j++) {
+        if (arr[j] < arr[minIndex]) {
+          minIndex = j;
         }
+      }
+
+      // Swap the found minimum element with the first element
+      if (minIndex !== i) {
+        [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]];
+
+        // Update the state to trigger UI re-render
+        setLineWidths([...arr]);
+
+        // Add a delay for visualization
+        await new Promise((resolve) => setTimeout(resolve, 1));
       }
     }
 
@@ -65,7 +71,7 @@ const Bubblesort = () => {
 
       {/* Play and Return buttons */}
       <View style={styles.buttoncontainer}>
-        <Pressable style={styles.playbutton} onPress={bubbleSort}>
+        <Pressable style={styles.playbutton} onPress={selectionSort}>
           <Feather name="play" size={50} color="#11cd2f" />
         </Pressable>
         <Pressable style={styles.returnbutton} onPress={handleReset}>
@@ -116,4 +122,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Bubblesort;
+export default Selectionsort;

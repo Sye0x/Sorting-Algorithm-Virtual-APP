@@ -13,37 +13,56 @@ import { useNavigation } from "@react-navigation/native";
 const generateRandomWidths = () =>
   Array.from({ length: 70 }, () => Math.floor(Math.random() * 85) + 1);
 
-const Bubblesort = () => {
+const Quicksort = () => {
   // State to hold the line widths
   const [lineWidths, setLineWidths] = useState(generateRandomWidths());
   const [isSorting, setIsSorting] = useState(false); // State to track if sorting is in progress
   const navigation = useNavigation<any>();
 
-  // Bubble Sort Algorithm with visual updates
-  const bubbleSort = async () => {
-    if (isSorting) return; // Prevent multiple clicks on the button
-    setIsSorting(true); // Set sorting state to true
+  // Quick Sort Helper Functions
+  const partition = async (arr: any, low: any, high: any) => {
+    let pivot = arr[high]; // Pivot element is taken as the last element
+    let i = low - 1; // Index of the smaller element
 
-    let arr = [...lineWidths]; // Copy the current line widths
-    let n = arr.length;
+    for (let j = low; j < high; j++) {
+      if (arr[j] < pivot) {
+        i++;
 
-    // Perform bubble sort with async to animate
-    for (let i = 0; i < n - 1; i++) {
-      for (let j = 0; j < n - i - 1; j++) {
-        if (arr[j] > arr[j + 1]) {
-          // Swap adjacent elements
-          [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
-
-          // Update the state to trigger UI re-render
-          setLineWidths([...arr]);
-
-          // Add a delay for visualization
-          await new Promise((resolve) => setTimeout(resolve, 1));
-        }
+        // Swap arr[i] and arr[j]
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+        setLineWidths([...arr]); // Update UI
+        await new Promise((resolve) => setTimeout(resolve, 1)); // Visual delay
       }
     }
 
-    setIsSorting(false); // Sorting complete, set sorting state to false
+    // Swap arr[i+1] with arr[high] (pivot element)
+    [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
+    setLineWidths([...arr]); // Update UI
+    await new Promise((resolve) => setTimeout(resolve, 1)); // Visual delay
+
+    return i + 1; // Return partition index
+  };
+
+  const quickSort = async (arr: any, low: any, high: any) => {
+    if (low < high) {
+      // Find partition index
+      let pi = await partition(arr, low, high);
+
+      // Recursively sort elements before and after partition
+      await quickSort(arr, low, pi - 1);
+      await quickSort(arr, pi + 1, high);
+    }
+  };
+
+  // Quick Sort function with UI update
+  const handleQuickSort = async () => {
+    if (isSorting) return; // Prevent multiple clicks
+    setIsSorting(true); // Set sorting state
+
+    let arr = [...lineWidths];
+    await quickSort(arr, 0, arr.length - 1);
+
+    setIsSorting(false); // Sorting complete
   };
 
   // Reset function to reset the state
@@ -65,7 +84,7 @@ const Bubblesort = () => {
 
       {/* Play and Return buttons */}
       <View style={styles.buttoncontainer}>
-        <Pressable style={styles.playbutton} onPress={bubbleSort}>
+        <Pressable style={styles.playbutton} onPress={handleQuickSort}>
           <Feather name="play" size={50} color="#11cd2f" />
         </Pressable>
         <Pressable style={styles.returnbutton} onPress={handleReset}>
@@ -116,4 +135,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Bubblesort;
+export default Quicksort;

@@ -13,37 +13,38 @@ import { useNavigation } from "@react-navigation/native";
 const generateRandomWidths = () =>
   Array.from({ length: 70 }, () => Math.floor(Math.random() * 85) + 1);
 
-const Bubblesort = () => {
+const InsertionSort = () => {
   // State to hold the line widths
   const [lineWidths, setLineWidths] = useState(generateRandomWidths());
   const [isSorting, setIsSorting] = useState(false); // State to track if sorting is in progress
   const navigation = useNavigation<any>();
 
-  // Bubble Sort Algorithm with visual updates
-  const bubbleSort = async () => {
-    if (isSorting) return; // Prevent multiple clicks on the button
-    setIsSorting(true); // Set sorting state to true
+  // Insertion Sort function with UI update
+  const handleInsertionSort = async () => {
+    if (isSorting) return; // Prevent multiple clicks
+    setIsSorting(true); // Set sorting state
 
-    let arr = [...lineWidths]; // Copy the current line widths
+    let arr = [...lineWidths]; // Copy of the array
     let n = arr.length;
 
-    // Perform bubble sort with async to animate
-    for (let i = 0; i < n - 1; i++) {
-      for (let j = 0; j < n - i - 1; j++) {
-        if (arr[j] > arr[j + 1]) {
-          // Swap adjacent elements
-          [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+    for (let i = 1; i < n; i++) {
+      let key = arr[i]; // Current element
+      let j = i - 1;
 
-          // Update the state to trigger UI re-render
-          setLineWidths([...arr]);
-
-          // Add a delay for visualization
-          await new Promise((resolve) => setTimeout(resolve, 1));
-        }
+      // Shift elements that are greater than the key to one position ahead
+      while (j >= 0 && arr[j] > key) {
+        arr[j + 1] = arr[j];
+        setLineWidths([...arr]); // Update UI
+        j--;
+        await new Promise((resolve) => setTimeout(resolve, 1)); // Delay for visualization
       }
+
+      arr[j + 1] = key; // Place the key in its correct position
+      setLineWidths([...arr]); // Update UI after insertion
+      await new Promise((resolve) => setTimeout(resolve, 1)); // Delay for visualization
     }
 
-    setIsSorting(false); // Sorting complete, set sorting state to false
+    setIsSorting(false); // Sorting complete
   };
 
   // Reset function to reset the state
@@ -65,7 +66,7 @@ const Bubblesort = () => {
 
       {/* Play and Return buttons */}
       <View style={styles.buttoncontainer}>
-        <Pressable style={styles.playbutton} onPress={bubbleSort}>
+        <Pressable style={styles.playbutton} onPress={handleInsertionSort}>
           <Feather name="play" size={50} color="#11cd2f" />
         </Pressable>
         <Pressable style={styles.returnbutton} onPress={handleReset}>
@@ -116,4 +117,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Bubblesort;
+export default InsertionSort;

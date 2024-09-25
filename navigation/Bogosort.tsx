@@ -13,37 +13,44 @@ import { useNavigation } from "@react-navigation/native";
 const generateRandomWidths = () =>
   Array.from({ length: 70 }, () => Math.floor(Math.random() * 85) + 1);
 
-const Bubblesort = () => {
+// Function to shuffle an array
+const shuffleArray = (arr: any) => {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+};
+
+// Function to check if the array is sorted
+const isSorted = (arr: any) => {
+  for (let i = 0; i < arr.length - 1; i++) {
+    if (arr[i] > arr[i + 1]) return false;
+  }
+  return true;
+};
+
+const BogoSort = () => {
   // State to hold the line widths
   const [lineWidths, setLineWidths] = useState(generateRandomWidths());
   const [isSorting, setIsSorting] = useState(false); // State to track if sorting is in progress
   const navigation = useNavigation<any>();
 
-  // Bubble Sort Algorithm with visual updates
-  const bubbleSort = async () => {
-    if (isSorting) return; // Prevent multiple clicks on the button
-    setIsSorting(true); // Set sorting state to true
+  // Bogo Sort function with UI update
+  const handleBogoSort = async () => {
+    if (isSorting) return; // Prevent multiple clicks
+    setIsSorting(true); // Set sorting state
 
-    let arr = [...lineWidths]; // Copy the current line widths
-    let n = arr.length;
+    let arr = [...lineWidths]; // Copy of the array
 
-    // Perform bubble sort with async to animate
-    for (let i = 0; i < n - 1; i++) {
-      for (let j = 0; j < n - i - 1; j++) {
-        if (arr[j] > arr[j + 1]) {
-          // Swap adjacent elements
-          [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
-
-          // Update the state to trigger UI re-render
-          setLineWidths([...arr]);
-
-          // Add a delay for visualization
-          await new Promise((resolve) => setTimeout(resolve, 1));
-        }
-      }
+    // Keep shuffling the array until it's sorted
+    while (!isSorted(arr)) {
+      arr = shuffleArray(arr); // Shuffle the array
+      setLineWidths([...arr]); // Update UI with the shuffled array
+      await new Promise((resolve) => setTimeout(resolve, 1)); // Add delay for visualization
     }
 
-    setIsSorting(false); // Sorting complete, set sorting state to false
+    setIsSorting(false); // Sorting complete
   };
 
   // Reset function to reset the state
@@ -65,7 +72,7 @@ const Bubblesort = () => {
 
       {/* Play and Return buttons */}
       <View style={styles.buttoncontainer}>
-        <Pressable style={styles.playbutton} onPress={bubbleSort}>
+        <Pressable style={styles.playbutton} onPress={handleBogoSort}>
           <Feather name="play" size={50} color="#11cd2f" />
         </Pressable>
         <Pressable style={styles.returnbutton} onPress={handleReset}>
@@ -116,4 +123,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Bubblesort;
+export default BogoSort;

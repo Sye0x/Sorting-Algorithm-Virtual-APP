@@ -16,30 +16,45 @@ const MainScreen = () => {
           <Text style={styles.containertext}>Bubble</Text>
           <Text style={styles.containertext}>Sort</Text>
         </Pressable>
-        <View style={styles.container}>
+        <Pressable
+          style={styles.container}
+          onPress={() => navigation.navigate("Selection")}
+        >
           <Text style={styles.containertext}>Selection</Text>
           <Text style={styles.containertext}>Sort</Text>
-        </View>
+        </Pressable>
       </View>
       <View style={styles.containerrow}>
-        <View style={styles.container}>
+        <Pressable
+          style={styles.container}
+          onPress={() => navigation.navigate("Merge")}
+        >
           <Text style={styles.containertext}>Merge</Text>
           <Text style={styles.containertext}>Sort</Text>
-        </View>
-        <View style={styles.container}>
+        </Pressable>
+        <Pressable
+          style={styles.container}
+          onPress={() => navigation.navigate("Quick")}
+        >
           <Text style={styles.containertext}>Quick</Text>
           <Text style={styles.containertext}>Sort</Text>
-        </View>
+        </Pressable>
       </View>
       <View style={styles.containerrow}>
-        <View style={styles.container}>
+        <Pressable
+          style={styles.container}
+          onPress={() => navigation.navigate("Insertion")}
+        >
           <Text style={styles.containertext}>Insertion</Text>
           <Text style={styles.containertext}>Sort</Text>
-        </View>
-        <View style={styles.container}>
+        </Pressable>
+        <Pressable
+          style={styles.container}
+          onPress={() => navigation.navigate("Bogo")}
+        >
           <Text style={styles.containertext}>Bogo</Text>
           <Text style={styles.containertext}>Sort</Text>
-        </View>
+        </Pressable>
       </View>
     </View>
   );
